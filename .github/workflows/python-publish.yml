@@ -29,7 +29,7 @@ jobs:
 
       # 使用 pypa/cibuildwheel action 来构建
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.17.* # 使用最新稳定版
+        uses: pypa/cibuildwheel@v2.23.2
         env:
           # --- cibuildwheel 配置 (根据你的需要调整) ---
           CIBW_BUILD: cp38-* cp39-* cp310-* cp311-* cp312-* # 构建的 Python 版本范围
