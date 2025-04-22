@@ -88,13 +88,12 @@ jobs:
       id-token: write # 必需权限
 
     steps:
-steps:
       # 步骤 1: 下载所有 Wheels Artifacts
       - name: Download wheel artifacts
         uses: actions/download-artifact@v4
         with:
           pattern: wheels-*
-          path: dist # <--- 直接下载到 dist 目录
+          path: dist
           merge-multiple: true
 
       # 步骤 2: 下载 sdist Artifact
