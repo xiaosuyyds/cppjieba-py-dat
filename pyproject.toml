@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "pybind11>=2.6"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cppjieba-py-dat"
+version = "0.0.1"
+authors = [
+    {name = "xiaosu", email = "xiaosu-1009@qq.com"},
+]
+description = "内存优化的 CppJieba Python 绑定 (基于 DAT)"
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: C++",
+    "Operating System :: OS Independent",
+    "Topic :: Text Processing :: Linguistic",
+    "Intended Audience :: Developers",
+]
+# 运行时 Python 依赖
+dependencies = [
+     "appdirs >= 1.4.0", # 用于查找跨平台的用户缓存目录
+]
+
+ [project.urls]
+ "Homepage" = "https://github.com/xiaosuyyds/cppjieba-py-dat"
+ "Bug Tracker" = "https://github.com/xiaosuyyds/cppjieba-py-dat/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"cppjieba_py_dat" = ["dict/**"]

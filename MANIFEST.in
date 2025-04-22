@@ -1,0 +1,16 @@
+# 包含项目根目录下的基本文件
+include LICENSE
+include README.md
+include pyproject.toml
+include setup.py
+
+# 递归包含 src 目录下的所有文件
+graft src
+
+# 全局排除一些不需要的文件类型，例如编译缓存
+global-exclude *.py[cod] __pycache__ *.so *.pyd *.o *.dylib
+
+# 明确排除构建目录，以防万一
+prune build
+prune dist
+prune src/*.egg-info
