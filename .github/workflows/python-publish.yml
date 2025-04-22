@@ -36,6 +36,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.23.2
         env:
           # --- 其他 cibuildwheel 配置 ---
+          CIBW_SKIP: "pp*"
           CIBW_ARCHS_MACOS: x86_64 arm64
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
