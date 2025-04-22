@@ -13,36 +13,39 @@ permissions:
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }} (${{ matrix.arch }})
-    # 在多个操作系统上运行
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false # 一个失败不影响其他
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [auto] # 让 cibuildwheel 自动检测架构
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        arch: [ auto ]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 获取所有历史记录，可能对版本号有用
+          fetch-depth: 0
 
-      # 使用 pypa/cibuildwheel action 来构建
+      - name: Set up QEMU
+        if: matrix.os == 'ubuntu-latest'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2.23.2
+        uses: pypa/cibuildwheel@v2 # 使用主版本引用
         env:
-          # --- cibuildwheel 配置 (根据你的需要调整) ---
-          CIBW_BUILD: cp38-* cp39-* cp310-* cp311-* cp312-* # 构建的 Python 版本范围
-          CIBW_ARCHS_MACOS: x86_64 arm64 # 尝试构建 macOS universal2
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014 # 使用兼容性好的 Linux 镜像
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014 # Linux ARM 镜像
+          # --- 其他 cibuildwheel 配置 ---
+          CIBW_ARCHS_MACOS: x86_64 arm64
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: pip install delvewheel && delvewheel repair -w {dest_dir} {wheel}
 
-      # 将构建好的 wheels 作为 artifact 上传，方便后续 Job 使用或手动下载
       - name: Upload wheels artifact
         uses: actions/upload-artifact@v4
         with:
           name: wheels-${{ matrix.os }}-${{ matrix.arch }}
-          path: ./wheelhouse/*.whl # cibuildwheel 默认输出到 wheelhouse
+          path: ./wheelhouse/*.whl
 
   build_sdist:
     name: Build source distribution
@@ -85,24 +88,21 @@ jobs:
       id-token: write # 必需权限
 
     steps:
-      # 下载所有构建好的 wheels artifacts
+steps:
+      # 步骤 1: 下载所有 Wheels Artifacts
       - name: Download wheel artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: wheels-* # 匹配所有 wheels-os-arch 模式的 artifact
-          path: dist/wheels # 下载到 dist/wheels 子目录
-          merge-multiple: true # 合并所有 artifact 到一个目录
+          pattern: wheels-*
+          path: dist # <--- 直接下载到 dist 目录
+          merge-multiple: true
 
-      # 下载 sdist artifact
+      # 步骤 2: 下载 sdist Artifact
       - name: Download sdist artifact
         uses: actions/download-artifact@v4
         with:
           name: sdist
-          path: dist # 下载到 dist 目录
-
-      # 将 wheels 移动到主 dist 目录 (pypi-publish action 期望的)
-      - name: Move wheels to dist
-        run: mv dist/wheels/* dist/
+          path: dist
 
       # 查看最终要上传的文件列表
       - name: List distributions

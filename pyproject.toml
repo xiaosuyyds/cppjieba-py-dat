@@ -9,8 +9,8 @@ authors = [
     {name = "xiaosu", email = "xiaosu-1009@qq.com"},
 ]
 description = "内存优化的 CppJieba Python 绑定 (基于 DAT)"
-readme = "README.md"
-requires-python = ">=3.7"
+readme = "README.MD"
+requires-python = ">=3.8"
 license = { file = "LICENSE" }
 classifiers = [
     "Development Status :: 4 - Beta",
