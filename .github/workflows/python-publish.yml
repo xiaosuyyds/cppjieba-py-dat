@@ -33,7 +33,7 @@ jobs:
           platforms: arm64
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v2 # 使用主版本引用
+        uses: pypa/cibuildwheel@v2.23.2
         env:
           # --- 其他 cibuildwheel 配置 ---
           CIBW_ARCHS_MACOS: x86_64 arm64
